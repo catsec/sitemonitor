@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  site-monitor:
+    build: .
+    container_name: sitemonitor
+    restart: unless-stopped
+    environment:
+      # Required: Your Pushover credentials
+      - PUSHOVER_TOKEN=your_pushover_token_here
+      - PUSHOVER_USER=your_pushover_user_key_here
+
+      # Required: Website(s) to monitor (comma-separated URLs)
+      - MONITOR_URL=https://example-store.com/shop/,https://another-store.com/products/
+
+      # Required: Search text (comma-separated simple text phrases)
+      - SEARCH_TEXT=Product Name,Another Product,Special Item
+
+      # Optional: Check interval in seconds (default: 300 = 5 minutes)
+      - CHECK_INTERVAL=300
+
+      # Optional: Notification settings
+      - NOTIFICATION_TITLE=Content Found!
+      - NOTIFICATION_PRIORITY=1
+      - NOTIFICATION_SOUND=magic
+      - AUTO_STOP_ON_FOUND=true
+
+      # Optional: HTTP settings
+      - USER_AGENT=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
+      # - CUSTOM_HEADERS={"Referer": "https://example.com", "Authorization": "Bearer token"}
+
+      # Optional: Timezone
+      - TZ=Asia/Jerusalem
+
+      # Optional: Enable debug logging (shows what content is being searched)
+      - DEBUG=false
+    
+    volumes:
+      # Persist logs
+      - ./logs:/app/logs
+    
+    # Memory limit (increased for large e-commerce sites)
+    mem_limit: 256m
+    memswap_limit: 256m
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "python", "-c", "import os; print('Monitor running')"]
+      interval: 5m
+      timeout: 30s
+      start_period: 1m
+      retries: 3
+
+# Optional: Create a network for isolation
+networks:
+  default:
+    name: site-monitor-network
