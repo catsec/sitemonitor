@@ -63,3 +63,7 @@ docker-compose.override.yml
 # Temporary files
 tmp/
 temp/
+
+# Claude Code files
+CLAUDE.md
+.claude
