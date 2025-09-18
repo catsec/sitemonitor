@@ -1,6 +1,10 @@
 services:
   site-monitor:
-    build: .
+    build:
+      context: .
+      platforms:
+        - linux/amd64
+        - linux/arm64
     container_name: sitemonitor
     restart: unless-stopped
     environment:
