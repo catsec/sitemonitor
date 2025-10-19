@@ -43,8 +43,11 @@ class SiteMonitor:
     PRODUCT_TEXT_LIMIT = 200  # Max chars for product container text
 
     def __init__(self):
-        # Load URLs from environment or use default
+        # Load URLs from environment - no defaults
         urls_env = os.getenv('MONITOR_URL')
+        if not urls_env:
+            raise ValueError("MONITOR_URL environment variable is required")
+
         raw_urls = [url.strip() for url in urls_env.split(',') if url.strip()]
 
         # Validate URLs
@@ -57,6 +60,7 @@ class SiteMonitor:
 
         if not self.urls:
             raise ValueError("No valid URLs provided")
+
         self.pushover_token = os.getenv('PUSHOVER_TOKEN')
         self.pushover_user = os.getenv('PUSHOVER_USER')
         self.check_interval = int(os.getenv('CHECK_INTERVAL', '300'))  # 5 minutes default
@@ -68,17 +72,17 @@ class SiteMonitor:
         self.notification_sound = os.getenv('NOTIFICATION_SOUND', 'magic')
         self.auto_stop_on_found = os.getenv('AUTO_STOP_ON_FOUND', 'true').lower() == 'true'
 
-        # Default search text (can be overridden via environment variable)
-        default_search_text = "DJI Mini 5 Pro"
-
-        # Load search text from environment or use default
+        # Load search text from environment - no defaults
         search_text_env = os.getenv('SEARCH_TEXT')
-        if search_text_env:
-            # Split by comma and strip whitespace for multiple search terms
-            raw_search_texts = [text.strip() for text in search_text_env.split(',') if text.strip()]
-            self.search_texts = raw_search_texts[:self.MAX_SEARCH_TERMS]  # Limit search terms
-        else:
-            self.search_texts = [default_search_text]
+        if not search_text_env:
+            raise ValueError("SEARCH_TEXT environment variable is required")
+
+        # Split by comma and strip whitespace for multiple search terms
+        raw_search_texts = [text.strip() for text in search_text_env.split(',') if text.strip()]
+        self.search_texts = raw_search_texts[:self.MAX_SEARCH_TERMS]  # Limit search terms
+
+        if not self.search_texts:
+            raise ValueError("SEARCH_TEXT cannot be empty")
 
         # Initialize tracking for found items to prevent duplicate notifications
         # Structure: {url: {search_term: found_timestamp}}
