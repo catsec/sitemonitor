@@ -30,7 +30,7 @@ A robust Python-based website monitoring service that watches for specific conte
 
 ```bash
 # Clone and enter directory
-git clone <repository-url>
+git clone github.com/catsec/sitemonitor
 cd sitemonitor
 
 # Edit docker-compose.yml with your settings
@@ -241,4 +241,5 @@ For issues and questions:
 1. Check the troubleshooting section above
 2. Review logs with `DEBUG=true`
 3. Verify configuration against examples
+
 4. Test with simple single-site setup first
