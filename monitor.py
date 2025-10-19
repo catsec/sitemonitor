@@ -44,7 +44,7 @@ class SiteMonitor:
 
     def __init__(self):
         # Load URLs from environment or use default
-        urls_env = os.getenv('MONITOR_URL', "https://www.djistore.benda.co.il/shop/")
+        urls_env = os.getenv('MONITOR_URL')
         raw_urls = [url.strip() for url in urls_env.split(',') if url.strip()]
 
         # Validate URLs
